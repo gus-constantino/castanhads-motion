@@ -12,10 +12,9 @@
   --accent:#e80537;--accent-ink:#fff;--accent-weak:color-mix(in srgb,var(--accent) 12%,var(--panel));
   --r:16px;--mono:'Roboto Mono',ui-monospace,monospace;--sans:'Roboto',-apple-system,'Segoe UI',system-ui,sans-serif;
   --shadow:0 1px 2px rgba(20,21,25,.04),0 8px 24px rgba(20,21,25,.06);
-  box-sizing:border-box;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);color-scheme:light;
 }
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0d11;--panel:#15161c;--panel2:#1d1f27;--ink:#eef0f3;--muted:#98a0ab;--line:#282b34;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35)}}
-:root[data-theme="dark"]{--bg:#0c0d11;--panel:#15161c;--panel2:#1d1f27;--ink:#eef0f3;--muted:#98a0ab;--line:#282b34;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35)}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0c0d11;--panel:#15161c;--panel2:#1d1f27;--ink:#eef0f3;--muted:#98a0ab;--line:#282b34;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35)}
 *{box-sizing:border-box}
 html{scroll-padding-top:80px}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -222,7 +221,7 @@ let mode="normal",cur="Hover In",curE="Systemic/default";
 const demo=$("#demo"),ball=$("#ball"),durS=$("#dur");
 $("#scount").textContent=Object.keys(STYLES).length+" estilos";
 
-$("#theme").onclick=()=>{const r=document.documentElement,dark=matchMedia("(prefers-color-scheme:dark)").matches;const c=r.getAttribute("data-theme");r.setAttribute("data-theme",c==="dark"?"light":c==="light"?"dark":dark?"light":"dark")};
+$("#theme").onclick=()=>{const r=document.documentElement;r.setAttribute("data-theme",r.getAttribute("data-theme")==="dark"?"light":"dark")};
 
 const sl=$("#styles");
 Object.keys(STYLES).forEach(n=>{const b=document.createElement("button");b.className="sbtn";b.textContent=n;b.setAttribute("aria-pressed",n===cur);b.onclick=()=>{cur=n;document.querySelectorAll(".sbtn").forEach(x=>x.setAttribute("aria-pressed",x.textContent===n));renderStyle();playDemo()};sl.appendChild(b)});
