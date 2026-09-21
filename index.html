@@ -59,7 +59,28 @@ section{padding:38px 0;border-top:1px solid var(--line)}
   radial-gradient(circle at 1px 1px, color-mix(in srgb,var(--muted) 24%,transparent) 1px, transparent 0) 0 0/22px 22px,var(--panel);
   display:grid;place-items:center;overflow:hidden}
 .stage::after{content:"";position:absolute;left:0;right:0;bottom:56px;height:1px;background:var(--line)}
-.demo{width:172px;height:104px;border-radius:18px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 16px var(--sans);box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 34%,transparent);will-change:transform,opacity}
+.demo{width:172px;height:104px;border-radius:18px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 16px var(--sans);box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 34%,transparent);will-change:transform,opacity;border:0;appearance:none;cursor:pointer;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition-property:transform,box-shadow,opacity;transition-duration:0ms}
+/* Checkbox portado de castanha/packages/castanha-react/src/components/Checkbox.
+   Estrutura, class names e valores vieram do fonte; os tokens estao inlineados
+   porque esta pagina e self-contained e nao consome @caju-beneficios/castanha-tokens.
+   Hover/press usam short-03 + systemic-default, como no componente. */
+@keyframes castanha-motion-scale-pop{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+.vh{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.castanha-checkbox{--cds-border-medium:#999999;--cds-border-semi-intense:#4d4d4d;--cds-neutral-semi-soft:#e3e3e3;--cds-accent:#e80537;--cds-text-inversed:#fcfcfc;
+ position:absolute;left:12px;bottom:4px;align-items:center;display:flex;cursor:pointer;color:var(--ink);font:500 14px var(--sans);user-select:none}
+:root[data-theme="dark"] .castanha-checkbox{--cds-border-medium:#808080;--cds-border-semi-intense:#cccccc;--cds-neutral-semi-soft:#4d4d4d;--cds-text-inversed:#1a1a1a}
+.castanha-checkbox__selector{align-items:center;display:inline-flex;flex-shrink:0;isolation:isolate;justify-content:center;position:relative;height:48px;width:48px}
+.castanha-checkbox__selector::after{background-color:var(--cds-neutral-semi-soft);border-radius:50%;content:"";inset:0;opacity:0;pointer-events:none;position:absolute;z-index:-1;transition:opacity 150ms cubic-bezier(.7,0,.5,1)}
+.castanha-checkbox__indicator{align-items:center;display:inline-flex;justify-content:center;border:1px solid var(--cds-border-medium);border-radius:8px;height:24px;width:24px;position:relative;transition:border-color 150ms cubic-bezier(.7,0,.5,1)}
+.castanha-checkbox__mark{color:var(--cds-text-inversed);display:none;height:16px;width:16px;pointer-events:none}
+.castanha-checkbox:hover .castanha-checkbox__indicator{border-color:var(--cds-border-semi-intense)}
+.castanha-checkbox:active .castanha-checkbox__indicator{border-color:var(--cds-accent)}
+.castanha-checkbox:hover .castanha-checkbox__selector::after,.castanha-checkbox:active .castanha-checkbox__selector::after{opacity:1}
+.castanha-checkbox:has(.castanha-checkbox__input:checked) .castanha-checkbox__indicator{background:var(--cds-accent);border:none}
+.castanha-checkbox:has(.castanha-checkbox__input:checked) .castanha-checkbox__mark{display:block}
+.castanha-checkbox__label{margin-left:-4px}
+.seg button:disabled{cursor:not-allowed;opacity:.55}
+.soon{font-size:11px;font-weight:400;opacity:.85;margin-left:5px}
 .ctl{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
 .play{background:var(--accent);color:var(--accent-ink);border:0;border-radius:11px;padding:11px 20px;font:700 14px var(--sans);cursor:pointer;transition:transform .1s,filter .14s}
 .play:hover{filter:brightness(1.06)} .play:active{transform:scale(.97)}
@@ -137,14 +158,14 @@ footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);f
 <div class="wrap">
   <section>
     <div class="hd"><h2>Motion Styles em ação</h2><span class="n" id="scount"></span></div>
-    <p class="sub">Cada estilo é um par composto no código: duração + easing (+ delay). Reproduza e compare. Reduced suprime o movimento (respeita prefers-reduced-motion).</p>
+    <p class="sub">Cada estilo é um par composto no código: duração + easing (+ delay). Passe o mouse, clique e solte o botão abaixo para disparar hover e press de verdade — o painel acompanha. O checkbox responde a Selected In/Out. Ou escolha um estilo para reproduzir isolado. O modo Reduced chega quando o token estiver publicado no Figma.</p>
     <div class="player">
       <div>
         <div class="styles" id="styles"></div>
-        <div class="stage"><div class="demo" id="demo">Pagar</div></div>
+        <div class="stage"><button class="demo" id="demo" type="button">Pagar</button><label class="castanha-checkbox" for="cbx"><span class="vh"><input type="checkbox" id="cbx" class="castanha-checkbox__input"></span><span class="castanha-checkbox__selector" aria-hidden="true"><span class="castanha-checkbox__indicator"><svg class="castanha-checkbox__mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10.4071 17.318C10.0166 17.7085 9.38339 17.7085 8.99287 17.318L4.70708 13.0322C4.31656 12.6417 4.32195 12.0031 4.71247 11.6126C5.103 11.2221 5.74156 11.2167 6.13208 11.6072L9.69997 15.1751L18.1679 6.7072C18.5584 6.31668 19.197 6.32207 19.5875 6.7126C19.978 7.10312 19.9834 7.74168 19.5929 8.1322L10.4071 17.318Z" fill="currentColor"/></svg></span></span><span class="castanha-checkbox__label">Salvar cartão</span></label></div>
         <div class="ctl">
           <button class="play" id="play">Reproduzir</button>
-          <div class="seg" id="mode"><button data-m="normal" aria-pressed="true">Normal</button><button data-m="reduced" aria-pressed="false">Reduced</button></div>
+          <div class="seg" id="mode"><button data-m="normal" aria-pressed="true">Normal</button><button data-m="reduced" aria-pressed="false" disabled aria-disabled="true" title="Em breve no Figma">Reduced <span class="soon">(em breve no Figma)</span></button></div>
         </div>
         <p class="note" id="snote"></p>
       </div>
@@ -237,21 +258,54 @@ function renderStyle(){const s=STYLES[cur],red=mode==="reduced";
  $("#snote").textContent=red?"Reduced: movimento suprimido (0ms). O resultado muda sem tocar no componente.":`Normal: ${s.d}ms · ${s.e}${s.y?` · delay ${s.y}ms`:""}.`;
  renderCascade(s,red);
 }
-const KF={
- lift:[{transform:"translateY(0)",boxShadow:"0 6px 16px var(--sh)"},{transform:"translateY(-16px)",boxShadow:"0 22px 40px var(--sh)"}],
- settle:[{transform:"translateY(-16px)"},{transform:"translateY(0)"}],
- press:[{transform:"scale(1)"},{transform:"scale(.88)"}],
- release:[{transform:"scale(.88)"},{transform:"scale(1)"}],
- in:[{transform:"scale(.8)",opacity:0},{transform:"scale(1)",opacity:1}],
- out:[{transform:"scale(1)",opacity:1},{transform:"scale(.82)",opacity:0}],
- disable:[{opacity:1},{opacity:.4}]
-};
-function playDemo(){const s=STYLES[cur],red=mode==="reduced";
- demo.getAnimations().forEach(a=>a.cancel());
- const kf=KF[s.a].map(f=>{const o={...f};if(o.boxShadow)o.boxShadow=o.boxShadow.replace("var(--sh)","color-mix(in srgb,var(--accent) 34%,transparent)");return o});
- demo.animate(kf,{duration:red?0:s.d,delay:red?0:s.y,easing:cbz(EASE[s.e]),fill:"forwards"});
- if(s.a==="out"||s.a==="disable"){setTimeout(()=>demo.animate(kf.slice().reverse(),{duration:260,easing:"ease",fill:"forwards"}),(red?0:s.d+s.y)+520)}
+// Estado visual do demo. Cada Motion Style mexe em UM campo; paint() compoe todos,
+// entao hover + pressed convivem em vez de um sobrescrever o transform do outro.
+const SH_REST="0 6px 16px color-mix(in srgb,var(--accent) 34%,transparent)";
+const SH_LIFT="0 22px 40px color-mix(in srgb,var(--accent) 34%,transparent)";
+const FIELD={"Hover In":["lift",true],"Hover Out":["lift",false],"Pressed":["press",true],"Released":["press",false],"Selected In":["sel",true],"Selected Out":["sel",false],"Disabled":["dis",true]};
+let vs={lift:false,press:false,sel:true,dis:false};
+const cbx=$("#cbx"),cbxInd=document.querySelector(".castanha-checkbox__indicator");
+// Selected In/Out moram no checkbox: ele tem estado real de selecao, e nao
+// termina invisivel como o fade do botao terminava.
+function popCbx(name){const s=STYLES[name],red=mode==="reduced";
+ cbxInd.style.animation="none";void cbxInd.offsetWidth;
+ cbxInd.style.animation=`castanha-motion-scale-pop ${red?0:s.d}ms ${cbz(EASE[s.e])} both`}
+function paint(st){const sc=(st.sel?1:.82)*(st.press?.88:1);
+ demo.style.transform=`translateY(${st.lift?-16:0}px) scale(${sc})`;
+ demo.style.boxShadow=st.lift?SH_LIFT:SH_REST;
+ demo.style.opacity=st.dis?.4:(st.sel?1:0)}
+function timing(name,ms,ease){const s=STYLES[name],red=mode==="reduced";
+ demo.style.transitionDuration=(ms!==undefined?ms:(red?0:s.d))+"ms";
+ demo.style.transitionDelay=(ms!==undefined?0:(red?0:s.y))+"ms";
+ demo.style.transitionTimingFunction=ease||cbz(EASE[s.e])}
+// Interacao real no elemento: transiciona do estado ATUAL para o alvo.
+function applyStyle(name,patch){timing(name);vs={...vs,...patch};paint(vs)}
+// Chips / Reproduzir: mostra a transicao isolada — salta pro estado inicial sem
+// animar, forca reflow, e so entao anima ate o alvo.
+let revertT;
+function playDemo(){const red=mode==="reduced";
+ clearTimeout(revertT);
+ if(cur==="Selected In"||cur==="Selected Out"){cbx.checked=cur==="Selected In";popCbx(cur);return}
+ const [f,to]=FIELD[cur];
+ demo.style.transitionDuration="0ms";demo.style.transitionDelay="0ms";
+ vs={lift:false,press:false,sel:true,dis:false,[f]:!to};paint(vs);
+ void getComputedStyle(demo).transform;
+ applyStyle(cur,{[f]:to});
+ // "Disabled" termina apagado: volta sozinho depois de uma pausa.
+ if(cur==="Disabled"){
+  revertT=setTimeout(()=>{timing(cur,260,"ease");vs={...vs,[f]:!to};paint(vs)},(red?0:STYLES[cur].d+STYLES[cur].y)+520)}
 }
+// Sincroniza chips + painel com o que acabou de acontecer no elemento.
+function syncTo(name){cur=name;document.querySelectorAll(".sbtn").forEach(x=>x.setAttribute("aria-pressed",x.textContent===name));renderStyle()}
+function act(name,patch){clearTimeout(revertT);syncTo(name);applyStyle(name,patch)}
+cbx.addEventListener("change",()=>{const n=cbx.checked?"Selected In":"Selected Out";clearTimeout(revertT);syncTo(n);popCbx(n)});
+demo.addEventListener("pointerenter",()=>act("Hover In",{lift:true}));
+demo.addEventListener("pointerleave",()=>act("Hover Out",{lift:false,press:false}));
+demo.addEventListener("pointerdown",()=>act("Pressed",{press:true}));
+demo.addEventListener("pointerup",()=>act("Released",{press:false}));
+demo.addEventListener("pointercancel",()=>act("Released",{press:false}));
+demo.addEventListener("keydown",e=>{if((e.key===" "||e.key==="Enter")&&!e.repeat)act("Pressed",{press:true})});
+demo.addEventListener("keyup",e=>{if(e.key===" "||e.key==="Enter")act("Released",{press:false})});
 function renderCascade(s,red){const c=$("#cascade");c.innerHTML="";
  const chains=[["Timing","Duration",s.d,durTok(s.d)],["Easing","Easing",s.e,null]];
  if(s.y)chains.push(["Delay","Delay",s.y,delTok(s.y)]);
