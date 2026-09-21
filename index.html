@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Castanha DS — Motion Tokens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7f9;--panel:#fff;--panel2:#eef0f4;--ink:#141519;--muted:#6a7280;--line:#e6e8ee;
+  --accent:#e80537;--accent-ink:#fff;--accent-weak:color-mix(in srgb,var(--accent) 12%,var(--panel));
+  --r:16px;--mono:'Roboto Mono',ui-monospace,monospace;--sans:'Roboto',-apple-system,'Segoe UI',system-ui,sans-serif;
+  --shadow:0 1px 2px rgba(20,21,25,.04),0 8px 24px rgba(20,21,25,.06);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0d11;--panel:#15161c;--panel2:#1d1f27;--ink:#eef0f3;--muted:#98a0ab;--line:#282b34;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0c0d11;--panel:#15161c;--panel2:#1d1f27;--ink:#eef0f3;--muted:#98a0ab;--line:#282b34;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+html{scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+.mono{font-family:var(--mono)}
+button{font-family:inherit}
+
+header{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0)}
+.bar{display:flex;gap:16px;justify-content:space-between;align-items:center;padding:12px 0;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
+.logo .m{width:22px;height:22px;border-radius:7px;background:var(--accent);display:grid;place-items:center}
+.logo .m::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent-ink)}
+.tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tools .cap{color:var(--muted);font-size:12.5px;margin-right:2px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font:500 13px/1 var(--sans);cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:border-color .14s ease,transform .1s ease}
+.chip:hover{border-color:var(--accent)} .chip:active{transform:scale(.96)}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-weak)}
+.chip .sw{width:11px;height:11px;border-radius:50%}
+.icn{width:36px;height:32px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;transition:transform .1s}
+.icn:active{transform:scale(.94)}
+
+.hero{padding:60px 0 34px;max-width:720px}
+.hero h1{font-size:clamp(32px,6.2vw,56px);line-height:1.02;letter-spacing:-.03em;margin:0 0 16px;font-weight:700}
+.hero p{font-size:clamp(16px,2.2vw,20px);color:var(--muted);margin:0}
+.rail{display:flex;gap:0;align-items:center;margin-top:26px;flex-wrap:wrap;font:500 13.5px var(--sans)}
+.rail b{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:7px 13px;font-weight:500}
+.rail i{color:var(--accent);font-style:normal;padding:0 9px;font-weight:700}
+
+section{padding:38px 0;border-top:1px solid var(--line)}
+.hd{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.hd h2{font-size:23px;font-weight:700;letter-spacing:-.02em;margin:0}
+.hd .n{color:var(--muted);font:500 13px var(--mono)}
+.sub{color:var(--muted);margin:0 0 24px;max-width:66ch}
+
+.player{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px}
+@media(max-width:800px){.player{grid-template-columns:1fr}}
+.styles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.sbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:11px;padding:9px 14px;font:500 14px var(--sans);cursor:pointer;transition:border-color .14s,background .14s,transform .1s}
+.sbtn:hover{border-color:var(--accent)} .sbtn:active{transform:scale(.97)}
+.sbtn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-weak)}
+.stage{position:relative;height:300px;border:1px solid var(--line);border-radius:var(--r);background:
+  radial-gradient(circle at 1px 1px, color-mix(in srgb,var(--muted) 24%,transparent) 1px, transparent 0) 0 0/22px 22px,var(--panel);
+  display:grid;place-items:center;overflow:hidden}
+.stage::after{content:"";position:absolute;left:0;right:0;bottom:56px;height:1px;background:var(--line)}
+.demo{width:172px;height:104px;border-radius:18px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 16px var(--sans);box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 34%,transparent);will-change:transform,opacity}
+.ctl{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.play{background:var(--accent);color:var(--accent-ink);border:0;border-radius:11px;padding:11px 20px;font:700 14px var(--sans);cursor:pointer;transition:transform .1s,filter .14s}
+.play:hover{filter:brightness(1.06)} .play:active{transform:scale(.97)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.seg button{border:0;background:var(--panel);color:var(--muted);padding:10px 15px;font:500 13px var(--sans);cursor:pointer;transition:color .14s}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.note{color:var(--muted);font-size:13px;margin:12px 0 0;min-height:20px}
+.spec{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow);align-self:start}
+.spec h3{margin:0 0 14px;font-size:16px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv:last-child{border-bottom:0}.kv .k{color:var(--muted)}.kv .v{font-family:var(--mono);text-align:right;font-size:13px}
+
+.cascade{display:grid;gap:12px}
+.chain{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.chain .ct{font-weight:700;font-size:14px;margin:0 0 14px;display:flex;gap:10px;align-items:center}
+.chain .ct .tg{font:500 11px var(--sans);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+.lay{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap}
+.cell{flex:1 1 158px;min-width:150px;border-radius:12px;padding:12px 13px;border:1px solid transparent}
+.cell .l{font:700 10.5px var(--sans);letter-spacing:.03em;margin:0 0 6px;opacity:.85}
+.cell .v{font-family:var(--mono);font-size:12.5px;word-break:break-word}
+.cell.p{background:color-mix(in srgb,#8b9099 13%,var(--panel));border-color:color-mix(in srgb,#8b9099 22%,var(--panel))}.cell.p .l{color:#7a828d}
+.cell.t{background:color-mix(in srgb,#2e77d0 13%,var(--panel));border-color:color-mix(in srgb,#2e77d0 26%,var(--panel))}.cell.t .l{color:#2e77d0}
+.cell.b{background:color-mix(in srgb,#2f9e44 13%,var(--panel));border-color:color-mix(in srgb,#2f9e44 26%,var(--panel))}.cell.b .l{color:#2f9e44}
+.cell.s{background:var(--accent-weak);border-color:color-mix(in srgb,var(--accent) 30%,var(--panel))}.cell.s .l{color:var(--accent)}
+.ar{align-self:center;color:var(--muted);font-weight:700}
+@media(max-width:800px){.ar{transform:rotate(90deg);align-self:start;margin-left:14px}}
+
+.lab{display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px}
+@media(max-width:800px){.lab{grid-template-columns:1fr}}
+.elist{display:flex;flex-direction:column;gap:6px}
+.ebtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:11px;padding:11px 14px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;font:500 14px var(--sans);transition:border-color .14s,background .14s}
+.ebtn:hover{border-color:var(--accent)}.ebtn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-weak)}
+.ebtn .bz{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.canvas{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+.cw{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+svg.curve{width:210px;height:210px;flex:0 0 auto}
+svg.curve .g{stroke:var(--line);stroke-width:1}
+svg.curve .pth{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round}
+svg.curve .cl{stroke:var(--muted);stroke-width:1.25;stroke-dasharray:2 4;opacity:.7}
+svg.curve .pt{fill:var(--panel);stroke:var(--accent);stroke-width:2.5}
+.trk{flex:1 1 240px;min-width:220px}
+.rl{height:60px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);position:relative;overflow:hidden}
+.rl .end{position:absolute;top:0;bottom:0;right:0;width:2px;background:color-mix(in srgb,var(--accent) 40%,transparent)}
+.bl{position:absolute;top:50%;left:12px;width:36px;height:36px;margin-top:-18px;border-radius:50%;background:var(--accent);box-shadow:0 4px 10px color-mix(in srgb,var(--accent) 40%,transparent);will-change:transform}
+.dr{display:flex;align-items:center;gap:12px;margin-top:16px}
+.dr input[type=range]{flex:1;accent-color:var(--accent)}
+.dr .dv{font-family:var(--mono);font-size:13px;min-width:66px;text-align:right}
+.refg{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 12px;font-size:15px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;border-radius:6px;transition:color .12s}
+.row:last-child{border-bottom:0}
+.row.tap{cursor:pointer}.row.tap:hover{color:var(--accent)}
+.row .n{font-family:var(--mono);font-size:12px;color:var(--muted)}.row .vv{font-family:var(--mono)}
+footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);font-size:13px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <div class="logo"><span class="m"></span> Castanha DS · Motion</div>
+  <div class="tools" id="brands">
+    <button class="icn" id="theme" title="Claro/escuro" aria-label="Alternar tema">◐</button>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Motion tokens que dá pra sentir</h1>
+    <p>Duração, easing e delay compõem cada momento de interação. Escolha um estilo e veja o token virar movimento — e como ele desce a cascata de Primitives até a intenção.</p>
+    <div class="rail"><b>Primitives</b><i>→</i><b>Theme</b><i>→</i><b>Brand Style</b><i>→</i><b>.Motion Styles</b></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section>
+    <div class="hd"><h2>Motion Styles em ação</h2><span class="n" id="scount"></span></div>
+    <p class="sub">Cada estilo é um par composto no código: duração + easing (+ delay). Reproduza e compare. Reduced suprime o movimento (respeita prefers-reduced-motion).</p>
+    <div class="player">
+      <div>
+        <div class="styles" id="styles"></div>
+        <div class="stage"><div class="demo" id="demo">Pagar</div></div>
+        <div class="ctl">
+          <button class="play" id="play">Reproduzir</button>
+          <div class="seg" id="mode"><button data-m="normal" aria-pressed="true">Normal</button><button data-m="reduced" aria-pressed="false">Reduced</button></div>
+        </div>
+        <p class="note" id="snote"></p>
+      </div>
+      <div class="spec">
+        <h3 id="sname">Hover In</h3>
+        <div class="kv"><span class="k">Duração</span><span class="v" id="sd"></span></div>
+        <div class="kv"><span class="k">Easing</span><span class="v" id="se"></span></div>
+        <div class="kv"><span class="k">Delay</span><span class="v" id="sy"></span></div>
+        <div class="kv"><span class="k">Dispara em</span><span class="v" id="st" style="font-family:var(--sans)"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="hd"><h2>A cascata do estilo</h2></div>
+    <p class="sub">O mesmo estilo resolvido camada por camada, da esquerda para a direita. O Theme dá semântica ao primitivo; o Brand Style veste a marca; a intenção mora no topo. Trocar a marca no topo re-veste sem tocar no componente.</p>
+    <div class="cascade" id="cascade"></div>
+  </section>
+
+  <section>
+    <div class="hd"><h2>Laboratório de easing</h2><span class="n">8 curvas</span></div>
+    <p class="sub">Selecione uma curva para ver o traçado cubic-bezier e a bolinha percorrer o trilho com ela. Ajuste a duração para comparar o ritmo.</p>
+    <div class="lab">
+      <div class="elist" id="elist"></div>
+      <div class="canvas">
+        <div class="cw">
+          <svg class="curve" viewBox="0 0 210 210" aria-hidden="true">
+            <line class="g" x1="25" y1="185" x2="185" y2="185"/><line class="g" x1="25" y1="25" x2="25" y2="185"/>
+            <line class="cl" id="cl1" x1="25" y1="185" x2="25" y2="185"/><line class="cl" id="cl2" x1="185" y1="25" x2="185" y2="25"/>
+            <path class="pth" id="pth" d=""/>
+            <circle class="pt" id="pt1" r="5" cx="25" cy="185"/><circle class="pt" id="pt2" r="5" cx="185" cy="25"/>
+          </svg>
+          <div class="trk">
+            <div class="rl"><span class="end"></span><div class="bl" id="ball"></div></div>
+            <div class="dr"><span class="k" style="color:var(--muted);font-size:13px">Duração</span><input type="range" id="dur" min="150" max="1600" step="50" value="900"><span class="dv" id="dv">900ms</span></div>
+            <p class="note" id="enote"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="hd"><h2>Referência</h2></div>
+    <p class="sub">Tokens semânticos do Theme. Clique numa duração ou easing para pré-visualizar na bolinha.</p>
+    <div class="refg">
+      <div class="card"><h3>Duration</h3><div id="rd"></div></div>
+      <div class="card"><h3>Delay <span class="mono" style="color:var(--muted);font-size:11px">· ×8</span></h3><div id="ry"></div></div>
+      <div class="card"><h3>Easing</h3><div id="re"></div></div>
+    </div>
+  </section>
+</div>
+<footer><div class="wrap">Castanha DS — Motion tokens · Primitives → Theme → Brand Style → .Motion Styles. Animações via Web Animations API; delay em múltiplos de 8; easings em cubic-bezier.</div></footer>
+
+<script>
+const DUR={Short:[0,50,100,150,200],Medium:[250,300,350,400],Long:[450,500,550,600],"Extra Long":[700,800,900,1000],Extended:[8000]};
+const DELAY={Short:[0,32,56,80,104],Medium:[128,184,200],Long:[384]};
+const EASE={"Systemic/default":[.7,0,.5,1],"Systemic/accelerate":[.7,0,.8,1],"Systemic/decelerate":[.2,0,.3,1],"Systemic/smooth":[.42,0,.58,1],"Expressive/default":[.6,0,.1,1],"Expressive/decelerate":[.4,0,.1,1],"Expressive/accelerate":[.2,0,.9,1],"Expressive/overshoot":[.9,0,.6,1]};
+const EPRIM={"Systemic/default":"ease-in-out/01","Systemic/accelerate":"ease-in/01","Systemic/decelerate":"ease-in-out/02","Systemic/smooth":"ease-in-out/03","Expressive/default":"ease-out/02","Expressive/decelerate":"ease-out/01","Expressive/accelerate":"ease-in/02","Expressive/overshoot":"ease-out/overshoot/01"};
+const STYLES={
+ "Hover In":{d:150,e:"Systemic/default",y:0,t:"mouse enter",a:"lift"},
+ "Hover Out":{d:150,e:"Systemic/default",y:56,t:"mouse leave",a:"settle"},
+ "Pressed":{d:200,e:"Systemic/accelerate",y:0,t:"mousedown",a:"press"},
+ "Released":{d:50,e:"Systemic/decelerate",y:0,t:"mouseup",a:"release"},
+ "Selected In":{d:350,e:"Expressive/decelerate",y:0,t:"ativa · Is Active → true",a:"in"},
+ "Selected Out":{d:200,e:"Expressive/decelerate",y:0,t:"desativa · Is Active → false",a:"out"},
+ "Disabled":{d:150,e:"Systemic/default",y:0,t:"entra em disabled",a:"disable"}
+};
+const pad=n=>String(n).padStart(2,"0"), $=s=>document.querySelector(s);
+const cbz=a=>`cubic-bezier(${a.join(",")})`;
+function durTok(ms){for(const g in DUR){const i=DUR[g].indexOf(ms);if(i>=0)return g+"/"+pad(i+(g==="Short"?0:1))}return"—"}
+function delTok(ms){for(const g in DELAY){const i=DELAY[g].indexOf(ms);if(i>=0)return g+"/"+pad(i+(g==="Short"?0:1))}return"—"}
+let mode="normal",cur="Hover In",curE="Systemic/default";
+const demo=$("#demo"),ball=$("#ball"),durS=$("#dur");
+$("#scount").textContent=Object.keys(STYLES).length+" estilos";
+
+$("#theme").onclick=()=>{const r=document.documentElement,dark=matchMedia("(prefers-color-scheme:dark)").matches;const c=r.getAttribute("data-theme");r.setAttribute("data-theme",c==="dark"?"light":c==="light"?"dark":dark?"light":"dark")};
+
+const sl=$("#styles");
+Object.keys(STYLES).forEach(n=>{const b=document.createElement("button");b.className="sbtn";b.textContent=n;b.setAttribute("aria-pressed",n===cur);b.onclick=()=>{cur=n;document.querySelectorAll(".sbtn").forEach(x=>x.setAttribute("aria-pressed",x.textContent===n));renderStyle();playDemo()};sl.appendChild(b)});
+$("#mode").querySelectorAll("button").forEach(b=>b.onclick=()=>{mode=b.dataset.m;$("#mode").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===mode));renderStyle()});
+$("#play").onclick=playDemo;
+
+function renderStyle(){const s=STYLES[cur],red=mode==="reduced";
+ $("#sname").textContent=cur;
+ $("#sd").textContent=(red?"0ms":s.d+"ms")+" · "+durTok(s.d);
+ $("#se").textContent=s.e;
+ $("#sy").textContent=s.y?((red?"0ms":s.y+"ms")+" · "+delTok(s.y)):"—";
+ $("#st").textContent=s.t;
+ $("#snote").textContent=red?"Reduced: movimento suprimido (0ms). O resultado muda sem tocar no componente.":`Normal: ${s.d}ms · ${s.e}${s.y?` · delay ${s.y}ms`:""}.`;
+ renderCascade(s,red);
+}
+const KF={
+ lift:[{transform:"translateY(0)",boxShadow:"0 6px 16px var(--sh)"},{transform:"translateY(-16px)",boxShadow:"0 22px 40px var(--sh)"}],
+ settle:[{transform:"translateY(-16px)"},{transform:"translateY(0)"}],
+ press:[{transform:"scale(1)"},{transform:"scale(.88)"}],
+ release:[{transform:"scale(.88)"},{transform:"scale(1)"}],
+ in:[{transform:"scale(.8)",opacity:0},{transform:"scale(1)",opacity:1}],
+ out:[{transform:"scale(1)",opacity:1},{transform:"scale(.82)",opacity:0}],
+ disable:[{opacity:1},{opacity:.4}]
+};
+function playDemo(){const s=STYLES[cur],red=mode==="reduced";
+ demo.getAnimations().forEach(a=>a.cancel());
+ const kf=KF[s.a].map(f=>{const o={...f};if(o.boxShadow)o.boxShadow=o.boxShadow.replace("var(--sh)","color-mix(in srgb,var(--accent) 34%,transparent)");return o});
+ demo.animate(kf,{duration:red?0:s.d,delay:red?0:s.y,easing:cbz(EASE[s.e]),fill:"forwards"});
+ if(s.a==="out"||s.a==="disable"){setTimeout(()=>demo.animate(kf.slice().reverse(),{duration:260,easing:"ease",fill:"forwards"}),(red?0:s.d+s.y)+520)}
+}
+function renderCascade(s,red){const c=$("#cascade");c.innerHTML="";
+ const chains=[["Timing","Duration",s.d,durTok(s.d)],["Easing","Easing",s.e,null]];
+ if(s.y)chains.push(["Delay","Delay",s.y,delTok(s.y)]);
+ chains.forEach(([title,type,val,tok])=>{let p,t,b,st;
+  if(type==="Easing"){p=EPRIM[val]+" · "+EASE[val].join(",");t="Motion/Easing/"+val;b="Common/Motion/Easing/"+val;st=cur+" · Easing"}
+  else{p=(red?0:val)+"ms";t="Motion/"+type+"/"+tok;b="Common/Motion/"+type+"/"+tok;st=cur+" · "+(type==="Duration"?"Timing":"Delay")+(red?" · reduced":"")}
+  const el=document.createElement("div");el.className="chain";
+  el.innerHTML=`<p class="ct">${title}<span class="tg">${red?"Reduced":"Normal"}</span></p><div class="lay">
+   <div class="cell p"><p class="l">PRIMITIVE</p><div class="v">${p}</div></div><span class="ar">→</span>
+   <div class="cell t"><p class="l">THEME</p><div class="v">${t}</div></div><span class="ar">→</span>
+   <div class="cell b"><p class="l">BRAND STYLE</p><div class="v">${b}</div></div><span class="ar">→</span>
+   <div class="cell s"><p class="l">.MOTION STYLES</p><div class="v">${st}</div></div></div>`;
+  c.appendChild(el)})
+}
+
+const el=$("#elist");
+Object.keys(EASE).forEach(n=>{const b=document.createElement("button");b.className="ebtn";b.setAttribute("aria-pressed",n===curE);b.innerHTML=`<span>${n}</span><span class="bz">${EASE[n].join(", ")}</span>`;b.onclick=()=>selEase(n,b);el.appendChild(b)});
+function selEase(n,btn){curE=n;document.querySelectorAll(".ebtn").forEach(x=>x.setAttribute("aria-pressed","false"));if(btn)btn.setAttribute("aria-pressed","true");drawCurve(EASE[n]);$("#enote").textContent=n+" · "+EPRIM[n]+(n==="Expressive/overshoot"?"  — cubic-bezier não passa de 1: overshoot real pede spring linear()":"");runBall()}
+function drawCurve(a){const X=x=>25+x*160,Y=y=>185-y*160;
+ $("#pth").setAttribute("d",`M ${X(0)} ${Y(0)} C ${X(a[0])} ${Y(a[1])} ${X(a[2])} ${Y(a[3])} ${X(1)} ${Y(1)}`);
+ $("#cl1").setAttribute("x2",X(a[0]));$("#cl1").setAttribute("y2",Y(a[1]));$("#cl2").setAttribute("x2",X(a[2]));$("#cl2").setAttribute("y2",Y(a[3]));
+ $("#pt1").setAttribute("cx",X(a[0]));$("#pt1").setAttribute("cy",Y(a[1]));$("#pt2").setAttribute("cx",X(a[2]));$("#pt2").setAttribute("cy",Y(a[3]))}
+durS.oninput=()=>{$("#dv").textContent=durS.value+"ms";runBall()};
+function runBall(){const rail=ball.parentElement,travel=rail.clientWidth-36-24;
+ ball.getAnimations().forEach(a=>a.cancel());
+ ball.animate([{transform:"translateX(0)"},{transform:`translateX(${travel}px)`}],{duration:+durS.value,easing:cbz(EASE[curE]),fill:"forwards"})}
+
+function refList(map,sel){const box=$(sel);Object.entries(map).forEach(([g,arr])=>arr.forEach((v,i)=>{const r=document.createElement("div");r.className="row tap";r.innerHTML=`<span class="n">${g}/${pad(i+(g==="Short"?0:1))}</span><span class="vv">${v}ms</span>`;r.onclick=()=>{durS.value=Math.max(150,Math.min(1600,v||150));$("#dv").textContent=durS.value+"ms";runBall()};box.appendChild(r)}))}
+refList(DUR,"#rd");refList(DELAY,"#ry");
+const re=$("#re");Object.entries(EASE).forEach(([n,a])=>{const r=document.createElement("div");r.className="row tap";r.innerHTML=`<span class="n">${n}</span><span class="vv" style="font-size:11px">${a.join(",")}</span>`;r.onclick=()=>{const btn=[...document.querySelectorAll(".ebtn")].find(x=>x.querySelector("span").textContent===n);selEase(n,btn)};re.appendChild(r)});
+
+renderStyle();drawCurve(EASE[curE]);$("#enote").textContent=curE+" · "+EPRIM[curE];
+requestAnimationFrame(()=>{runBall();playDemo()});
+</script>
+</body>
+</html>
