@@ -149,8 +149,8 @@ footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);f
 
 <div class="wrap">
   <div class="hero">
-    <h1>Motion tokens que dá pra sentir</h1>
-    <p>Duração, easing e delay compõem cada momento de interação. Escolha um estilo e veja o token virar movimento — e como ele desce a cascata de Primitives até a intenção.</p>
+    <h1>Como os motion tokens funcionam</h1>
+    <p>Duração, easing e delay definem cada momento de interação. Escolha um estilo para acompanhar o token em movimento e entender como ele desce a cascata, de Primitives até a intenção.</p>
     <div class="rail"><b>Primitives</b><i>→</i><b>Theme</b><i>→</i><b>Brand Style</b><i>→</i><b>.Motion Styles</b></div>
   </div>
 </div>
@@ -158,7 +158,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);f
 <div class="wrap">
   <section>
     <div class="hd"><h2>Motion Styles em ação</h2><span class="n" id="scount"></span></div>
-    <p class="sub">Cada estilo é um par composto no código: duração + easing (+ delay). Passe o mouse, clique e solte o botão abaixo para disparar hover e press de verdade — o painel acompanha. O checkbox responde a Selected In/Out. Ou escolha um estilo para reproduzir isolado. O modo Reduced chega quando o token estiver publicado no Figma.</p>
+    <p class="sub">Cada estilo é um par composto no código: duração + easing (+ delay). Passe o mouse, clique e solte o botão abaixo para disparar hover e press no próprio elemento — o painel acompanha. O checkbox responde a Selected In/Out. Para reproduzir um estilo isolado, escolha um na lista acima. O modo Reduced chega quando o token estiver publicado no Figma.</p>
     <div class="player">
       <div>
         <div class="styles" id="styles"></div>
@@ -181,13 +181,13 @@ footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);f
 
   <section>
     <div class="hd"><h2>A cascata do estilo</h2></div>
-    <p class="sub">O mesmo estilo resolvido camada por camada, da esquerda para a direita. O Theme dá semântica ao primitivo; o Brand Style veste a marca; a intenção mora no topo. Trocar a marca no topo re-veste sem tocar no componente.</p>
+    <p class="sub">O mesmo estilo resolvido camada por camada, da esquerda para a direita. O Theme dá semântica ao primitivo; o Brand Style veste a marca; a intenção mora no topo. Trocar a marca no topo troca a aparência sem tocar no componente.</p>
     <div class="cascade" id="cascade"></div>
   </section>
 
   <section>
     <div class="hd"><h2>Laboratório de easing</h2><span class="n">8 curvas</span></div>
-    <p class="sub">Selecione uma curva para ver o traçado cubic-bezier e a bolinha percorrer o trilho com ela. Ajuste a duração para comparar o ritmo.</p>
+    <p class="sub">Selecione uma curva para acompanhar o traçado cubic-bezier e o movimento da bolinha. Ajuste a duração para comparar o ritmo.</p>
     <div class="lab">
       <div class="elist" id="elist"></div>
       <div class="canvas">
@@ -210,7 +210,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);f
 
   <section>
     <div class="hd"><h2>Referência</h2></div>
-    <p class="sub">Tokens semânticos do Theme. Clique numa duração ou easing para pré-visualizar na bolinha.</p>
+    <p class="sub">Tokens semânticos do Theme. Clique em uma duração ou easing para acompanhar a bolinha em movimento.</p>
     <div class="refg">
       <div class="card"><h3>Duration</h3><div id="rd"></div></div>
       <div class="card"><h3>Delay <span class="mono" style="color:var(--muted);font-size:11px">· ×8</span></h3><div id="ry"></div></div>
@@ -218,7 +218,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);f
     </div>
   </section>
 </div>
-<footer><div class="wrap">Castanha DS — Motion tokens · Primitives → Theme → Brand Style → .Motion Styles. Animações via Web Animations API; delay em múltiplos de 8; easings em cubic-bezier.</div></footer>
+<footer><div class="wrap">Castanha DS — Motion tokens · Primitives → Theme → Brand Style → .Motion Styles. Animações via CSS transitions e Web Animations API; delay em múltiplos de 8; easings em cubic-bezier.</div></footer>
 
 <script>
 const DUR={Short:[0,50,100,150,200],Medium:[250,300,350,400],Long:[450,500,550,600],"Extra Long":[700,800,900,1000],Extended:[8000]};
