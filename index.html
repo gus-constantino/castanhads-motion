@@ -127,7 +127,7 @@ svg.curve .pt{fill:var(--panel);stroke:var(--accent);stroke-width:2.5}
 .bl{position:absolute;top:50%;left:12px;width:36px;height:36px;margin-top:-18px;border-radius:50%;background:var(--accent);box-shadow:0 4px 10px color-mix(in srgb,var(--accent) 40%,transparent);will-change:transform}
 .dr{display:flex;align-items:center;gap:12px;margin-top:16px}
 .dr input[type=range]{flex:1;accent-color:var(--accent)}
-.dr .dv{font-family:var(--mono);font-size:13px;min-width:66px;text-align:right}
+.dr .dv{font-family:var(--mono);font-size:13px;min-width:150px;text-align:right}
 .refg{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:14px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
 .card h3{margin:0 0 12px;font-size:15px}
@@ -200,7 +200,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);f
           </svg>
           <div class="trk">
             <div class="rl"><span class="end"></span><div class="bl" id="ball"></div></div>
-            <div class="dr"><span class="k" style="color:var(--muted);font-size:13px">Duração</span><input type="range" id="dur" min="150" max="1600" step="50" value="900"><span class="dv" id="dv">900ms</span></div>
+            <div class="dr"><span class="k" style="color:var(--muted);font-size:13px">Duração</span><input type="range" id="dur" min="0" step="1" value="0" aria-label="Duração"><span class="dv" id="dv">900ms</span></div>
             <p class="note" id="enote"></p>
           </div>
         </div>
@@ -210,7 +210,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 48px;color:var(--muted);f
 
   <section>
     <div class="hd"><h2>Referência</h2></div>
-    <p class="sub">Tokens semânticos do Theme. Clique em uma duração ou easing para acompanhar a bolinha em movimento.</p>
+    <p class="sub">Tokens semânticos do Theme. Clique em uma duração, delay ou easing para acompanhar a bolinha em movimento.</p>
     <div class="refg">
       <div class="card"><h3>Duration</h3><div id="rd"></div></div>
       <div class="card"><h3>Delay <span class="mono" style="color:var(--muted);font-size:11px">· ×8</span></h3><div id="ry"></div></div>
@@ -328,16 +328,30 @@ function drawCurve(a){const X=x=>25+x*160,Y=y=>185-y*160;
  $("#pth").setAttribute("d",`M ${X(0)} ${Y(0)} C ${X(a[0])} ${Y(a[1])} ${X(a[2])} ${Y(a[3])} ${X(1)} ${Y(1)}`);
  $("#cl1").setAttribute("x2",X(a[0]));$("#cl1").setAttribute("y2",Y(a[1]));$("#cl2").setAttribute("x2",X(a[2]));$("#cl2").setAttribute("y2",Y(a[3]));
  $("#pt1").setAttribute("cx",X(a[0]));$("#pt1").setAttribute("cy",Y(a[1]));$("#pt2").setAttribute("cx",X(a[2]));$("#pt2").setAttribute("cy",Y(a[3]))}
-durS.oninput=()=>{$("#dv").textContent=durS.value+"ms";runBall()};
+// O slider indexa a escala de Duration do Theme, derivada do MESMO DUR que
+// alimenta a Referencia — as duas listas nao tem como divergir.
+const DURSCALE=Object.entries(DUR).flatMap(([g,arr])=>arr.map((ms,i)=>({tok:g+"/"+pad(i+(g==="Short"?0:1)),ms})));
+let delayMs=0,delayTok=null;
+durS.max=DURSCALE.length-1;
+const durAt=()=>DURSCALE[Math.min(DURSCALE.length-1,Math.max(0,+durS.value))];
+function setDur(i){durS.value=i;paintDur();runBall()}
+function paintDur(){const d=durAt();$("#dv").textContent=d.tok+" · "+d.ms+"ms"+(delayMs?" +"+delayMs+"ms":"")}
+durS.oninput=()=>{paintDur();runBall()};
 function runBall(){const rail=ball.parentElement,travel=rail.clientWidth-36-24;
  ball.getAnimations().forEach(a=>a.cancel());
- ball.animate([{transform:"translateX(0)"},{transform:`translateX(${travel}px)`}],{duration:+durS.value,easing:cbz(EASE[curE]),fill:"forwards"})}
+ ball.animate([{transform:"translateX(0)"},{transform:`translateX(${travel}px)`}],{duration:durAt().ms,delay:delayMs,easing:cbz(EASE[curE]),fill:"forwards"})}
 
-function refList(map,sel){const box=$(sel);Object.entries(map).forEach(([g,arr])=>arr.forEach((v,i)=>{const r=document.createElement("div");r.className="row tap";r.innerHTML=`<span class="n">${g}/${pad(i+(g==="Short"?0:1))}</span><span class="vv">${v}ms</span>`;r.onclick=()=>{durS.value=Math.max(150,Math.min(1600,v||150));$("#dv").textContent=durS.value+"ms";runBall()};box.appendChild(r)}))}
-refList(DUR,"#rd");refList(DELAY,"#ry");
+function refList(map,sel,isDelay){const box=$(sel);Object.entries(map).forEach(([g,arr])=>arr.forEach((v,i)=>{const tok=g+"/"+pad(i+(g==="Short"?0:1));
+ const r=document.createElement("div");r.className="row tap";r.innerHTML=`<span class="n">${tok}</span><span class="vv">${v}ms</span>`;
+ // Delay nao e duracao: aplica como delay real, em vez de grampear no slider.
+ r.onclick=isDelay?()=>{delayMs=v;delayTok=tok;paintDur();runBall()}
+                  :()=>{delayMs=0;delayTok=null;setDur(DURSCALE.findIndex(d=>d.tok===tok))};
+ box.appendChild(r)}))}
+refList(DUR,"#rd");refList(DELAY,"#ry",true);
 const re=$("#re");Object.entries(EASE).forEach(([n,a])=>{const r=document.createElement("div");r.className="row tap";r.innerHTML=`<span class="n">${n}</span><span class="vv" style="font-size:11px">${a.join(",")}</span>`;r.onclick=()=>{const btn=[...document.querySelectorAll(".ebtn")].find(x=>x.querySelector("span").textContent===n);selEase(n,btn)};re.appendChild(r)});
 
 renderStyle();drawCurve(EASE[curE]);$("#enote").textContent=curE+" · "+EPRIM[curE];
+durS.value=Math.max(0,DURSCALE.findIndex(d=>d.ms===500));paintDur();
 requestAnimationFrame(()=>{runBall();playDemo()});
 </script>
 </body>
